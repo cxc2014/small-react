@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="wrapper"></div>
+<script language="JavaScript">
+
+    const createDOMFromString = (domString) => {
+        const div = document.createElement('div');
+        div.innerHTML = domString;
+        return div;
+    };
+
+    const wrapper = document.querySelector('.wrapper');
+
+    class LikeButton {
+
+        constructor() {
+            this.state = {isLike: false};
+        }
+
+        setState(state) {
+            const old = this.div;
+            this.state = state;
+            this.div = this.render();
+
+            this.onStateChange(old, this.div);
+        }
+
+        onStateChange(oldElem, newElem) {
+            wrapper.insertBefore(newElem, oldElem);
+            wrapper.removeChild(oldElem);
+        }
+
+        changeLikeText() {
+            this.setState({ isLike: !this.state.isLike });
+        }
+
+        render() {
+            this.div = createDOMFromString(`
+<button class='like-button'>
+<span class='like-text'>${this.state.isLike ? '取消' : '点赞'}</span>
+<span>👍</span>
+</button>
+`);
+            this.div.addEventListener('click', this.changeLikeText.bind(this), false);
+            return this.div;
+        }
+    }
+
+    const likeButton = new LikeButton();
+    wrapper.appendChild(likeButton.render());
+
+    const dislikeButton = new LikeButton();
+    wrapper.appendChild(dislikeButton.render());
+</script>
+</body>
+</html>
